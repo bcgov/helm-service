@@ -1,0 +1,153 @@
+{{- if and .Values.cronjob .Values.cronjob.enabled }}
+{{- $customUser := include "postgresql.v1.username" . }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "component.fullname" . }}
+  labels:
+    {{- include "component.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+  {{- if .Values.cronjob.annotations }}
+  annotations: {{- .Values.cronjob.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  schedule: {{ quote .Values.cronjob.schedule }}
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  {{- if .Values.cronjob.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
+  {{- end }}
+  jobTemplate:
+    spec:
+      {{- if .Values.cronjob.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      {{- end }}
+      template:
+        metadata:
+          labels:
+            {{- include "component.labels" . | nindent 12 }}
+          {{- if .Values.cronjob.annotations }}
+          annotations: {{- .Values.cronjob.annotations | nindent 4 }}
+          {{- end }}
+        spec:
+          {{- if .Values.cronjob.nodeSelector }}
+          nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.cronjob.nodeSelector "context" $) | nindent 12 }}
+          {{- end }}
+          containers:
+            {{- range .Values.containers }}
+            -
+              name: {{ .name }}
+              {{- if .securityContext }}
+              securityContext:
+              {{- toYaml .securityContext | nindent 12 }}
+              {{- end}}
+              image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$.Release.Name}}-{{ .name }}:{{ .tag }}'
+              imagePullPolicy: Always
+                {{- if .envFrom }}
+              envFrom:
+                    {{- if .envFrom.secretRef }}
+                -
+                  secretRef:
+                    name: {{ include "component.fullname" $ }}
+                    {{- end }}
+                    {{- if .envFrom.configMapRef }}
+                -
+                  configMapRef:
+                    name: {{ include "component.fullname" $ }}
+                    {{- end }}
+                    {{- end }}
+                    {{- if .env }}
+              env:
+                    {{- if .env.fromLocalConfigmap }}
+                    {{- range $item := .env.fromLocalConfigmap }} # picking individual elements from configmap of individual component (backend, frontend, etc)
+                -
+                  name: {{$item.name}} # the env variable name
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ include "component.fullname" $ }}
+                      key: {{$item.key}} # the key of configmap
+                    {{- end }}
+                    {{- end }}
+                    {{- if .env.fromGlobalConfigmap }}
+                    {{- range $item := .env.fromGlobalConfigmap }} # picking individual elements from global configmap of entire deployment set
+                -
+                  name: {{$item.name}} # the env variable name
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $.Release.Name }}
+                      key: {{$item.key}} # the key of configmap
+                    {{- end }}
+                    {{- end }}
+                    {{- if .env.fromLocalSecret }}
+                    {{- range $item := .env.fromLocalSecret }} # picking individual elements from secret of individual component (backend, frontend, etc)
+                -
+                  name: {{$item.name}} # the env variable name
+                  valueFrom:
+                    secretKeyRef:
+                            {{- if $item.secretName }}
+                      name: {{tpl $item.secretName $}}
+                            {{- else }}
+                      name: {{ include "component.fullname" $ }}
+                            {{- end }}
+                      key: {{$item.key}} # the key of secret
+                    {{- end }}
+                    {{- end }}
+                    {{- if .env.fromGlobalSecret }}
+                    {{- range $item := .env.fromGlobalSecret }} # picking individual elements from global secret of entire deployment set
+                -
+                  name: {{$item.name}} # the env variable name
+                  valueFrom:
+                    secretKeyRef:
+                            {{- if $item.secretName }}
+                      name: {{tpl $item.secretName $}}
+                            {{- else }}
+                      name: {{ $.Release.Name }}
+                            {{- end }}
+                      key: {{$item.key}} # the key of secret
+                    {{- end }}
+                    {{- end }}
+                    {{- if .env.fromValues }} #this could be pure values based env like DB URLS or DB Host et
+                    {{- range $item := .env.fromValues }} # picking individual elements from global secret of entire deployment set
+                -
+                  name: {{$item.name}} # the env variable name
+                  value: {{tpl  $item.value $ | quote}} # the value of env variable
+                    {{- end }}
+                    {{- end }}
+                    {{- end }}
+
+
+              {{- if .resources}}
+              {{- with .resources }}
+              resources:
+                {{- toYaml . | nindent 12 }}
+              {{- end }}
+              {{- else }}
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 250Mi
+                requests:
+                  cpu: 20m
+                  memory: 50Mi
+              {{- end }}
+              {{- end }}
+              {{- if .volumeMounts }}
+              {{- with .volumeMounts }}
+              volumeMounts:
+                {{- toYaml . | nindent 12 }}
+              {{- end }}
+              {{- end }}
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          {{- if .Values.cronjob.podSecurityContext.enabled }}
+          securityContext:
+            fsGroup: {{ .Values.cronjob.podSecurityContext.fsGroup }}
+          {{- end }}
+          {{- if .Values.cronjob.volumes.enabled }}
+          {{- with .Values.cronjob.volumes }}
+          volumes:
+            {{- toYaml . | nindent 12 }}
+
+          {{- end }}
+          {{- end }}
+{{- end}}
