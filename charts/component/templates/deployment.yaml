@@ -47,6 +47,25 @@ spec:
         - name: {{ .name }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
           imagePullPolicy: Always
+          {{- if .envFrom }}
+          envFrom:
+          {{- if .envFrom.secretRef }}
+            - secretRef:
+                {{- if .envFrom.secretRef.name }}
+                name: {{ .envFrom.secretRef.name }}
+                {{- else }}
+                name: {{ include "component.fullname" $ }}
+                {{- end }}
+          {{- end }}
+          {{- if .envFrom.configMapRef }}
+            - configMapRef:
+                {{- if .envFrom.configMapRef.name }}
+                name: {{ .envFrom.configMapRef.name }}
+                {{- else }}
+                name: {{ include "component.fullname" $ }}
+                {{- end }}
+          {{- end }}
+          {{- end }}
           {{- if .env }}
           env:
           {{- if .env.fromLocalConfigmap }}
@@ -137,11 +156,19 @@ spec:
           envFrom:
           {{- if .envFrom.secretRef }}
             - secretRef:
+                {{- if .envFrom.secretRef.name }}
+                name: {{ .envFrom.secretRef.name }}
+                {{- else }}
                 name: {{ include "component.fullname" $ }}
+                {{- end }}
           {{- end }}
           {{- if .envFrom.configMapRef }}
             - configMapRef:
+                {{- if .envFrom.configMapRef.name }}
+                name: {{ .envFrom.configMapRef.name }}
+                {{- else }}
                 name: {{ include "component.fullname" $ }}
+                {{- end }}
           {{- end }}
           {{- end }}
           {{- if .env }}
