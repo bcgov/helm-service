@@ -52,7 +52,7 @@ spec:
           {{- if .envFrom.secretRef }}
             - secretRef:
                 {{- if .envFrom.secretRef.name }}
-                name: {{ .envFrom.secretRef.name }}
+                name: {{ tpl .envFrom.secretRef.name $ }}
                 {{- else }}
                 name: {{ include "component.fullname" $ }}
                 {{- end }}
@@ -60,7 +60,7 @@ spec:
           {{- if .envFrom.configMapRef }}
             - configMapRef:
                 {{- if .envFrom.configMapRef.name }}
-                name: {{ .envFrom.configMapRef.name }}
+                name: {{ tpl .envFrom.configMapRef.name $ }}
                 {{- else }}
                 name: {{ include "component.fullname" $ }}
                 {{- end }}
@@ -157,7 +157,7 @@ spec:
           {{- if .envFrom.secretRef }}
             - secretRef:
                 {{- if .envFrom.secretRef.name }}
-                name: {{ .envFrom.secretRef.name }}
+                name: {{ tpl .envFrom.secretRef.name $ }}
                 {{- else }}
                 name: {{ include "component.fullname" $ }}
                 {{- end }}
@@ -165,7 +165,7 @@ spec:
           {{- if .envFrom.configMapRef }}
             - configMapRef:
                 {{- if .envFrom.configMapRef.name }}
-                name: {{ .envFrom.configMapRef.name }}
+                name: {{ tpl .envFrom.configMapRef.name $ }}
                 {{- else }}
                 name: {{ include "component.fullname" $ }}
                 {{- end }}
