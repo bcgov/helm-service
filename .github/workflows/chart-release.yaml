@@ -27,3 +27,25 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Conventional Changelog Update
+        uses: TriPSs/conventional-changelog-action@v3
+        id: changelog
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          output-file: 'CHANGELOG.md'
+          skip-version-file: 'true'
+          skip-commit: 'true'
+          skip-on-empty: 'false'
+          git-push: 'true'
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ needs.semantic-version.outputs.semanticVersion != '' }}
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          token: ${{ github.token }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
