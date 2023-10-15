@@ -1,0 +1,20 @@
+{{- if and .Values.pvc .Values.pvc.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  {{- if .Values.pvc.nameOverride }}
+  name: {{ tpl .Values.pvc.nameOverride $}}
+  {{- else }}
+  name: {{ include "component.fullname" . }}
+  {{- end }}
+  labels:
+    {{- include "component.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.pvc.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.size }}
+  storageClassName: {{ .Values.pvc.storageClassName }}
+{{- end }}

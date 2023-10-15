@@ -282,10 +282,8 @@ spec:
           {{- end }}
       {{- end }}
       {{- if .Values.volumes }}
-      {{- with .Values.volumes }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- tpl (toYaml .Values.volumes) . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
