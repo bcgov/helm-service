@@ -139,14 +139,12 @@ spec:
                 {{- tpl (toYaml .volumeMounts) $ | nindent 12 }}
               {{- end }}
           restartPolicy: {{ .Values.cronjob.restartPolicy }}
-          {{- if .Values.cronjob.podSecurityContext.enabled }}
+          {{- if and .Values.cronjob.podSecurityContext .Values.cronjob.podSecurityContext.enabled }}
           securityContext:
             fsGroup: {{ .Values.cronjob.podSecurityContext.fsGroup }}
           {{- end }}
-          {{- if .Values.cronjob.volumes.enabled }}
-          {{- if .Values.cronjob.volumes }}
+          {{- if and .Values.cronjob.volumes .Values.cronjob.volumes.enabled }}
           volumes:
           {{- tpl (toYaml .Values.cronjob.volumes) . | nindent 10 }}
-          {{- end }}
           {{- end }}
 {{- end}}
