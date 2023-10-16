@@ -37,7 +37,8 @@ jobs:
           skip-version-file: 'true'
           skip-commit: 'true'
           skip-on-empty: 'false'
-          git-push: 'true'
+          git-push: 'false'
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: ${{ steps.changelog.outputs.tag != '' }}

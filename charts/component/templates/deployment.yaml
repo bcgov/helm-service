@@ -48,8 +48,17 @@ spec:
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
           imagePullPolicy: Always
           {{- if .command }}
-          command: {{ .command }}
+          command:
+          {{- range .command }}
+            - "{{ . }}"
+          {{- end }}
           {{- end}}
+          {{- if .args }}
+          args:
+          {{- range .args }}
+            - "{{ . }}"
+          {{- end }}
+          {{- end }}
           {{- if .envFrom }}
           envFrom:
           {{- if .envFrom.secretRef }}
@@ -138,6 +147,10 @@ spec:
               cpu: 20m
               memory: 50Mi
           {{- end }}
+          {{- if .volumeMounts }}
+          volumeMounts:
+          {{- tpl (toYaml .volumeMounts) $ | nindent 12 }}
+          {{- end }}
       {{- end }}
       {{- end }}
       containers:
@@ -148,14 +161,17 @@ spec:
           {{- toYaml .securityContext | nindent 12 }}
           {{- end}}
           {{- if .command }}
-          command: {{ .command }}
+          command:
+            {{- range .command }}
+            - "{{ . }}"
+          {{- end }}
           {{- end}}
-          {{- if and .vault .vault.enabled }}
+          {{- if .args }}
           args:
-            - 'sh'
-            - '-c'
-            - '{{- range $k := .vault.secretPaths }}source /vault/secrets/{{$k}} && {{- end}}{{ .vault.entrypoint }}'
-          {{- end}}
+          {{- range .args }}
+            - "{{ . }}"
+          {{- end }}
+          {{- end }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
           imagePullPolicy: Always
           {{- if .envFrom }}
