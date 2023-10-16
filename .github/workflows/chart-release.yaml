@@ -40,7 +40,7 @@ jobs:
           git-push: 'true'
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: ${{ needs.semantic-version.outputs.semanticVersion != '' }}
+        if: ${{ steps.changelog.outputs.tag != '' }}
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
