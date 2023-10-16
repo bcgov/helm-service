@@ -47,6 +47,9 @@ spec:
         - name: {{ .name }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
           imagePullPolicy: Always
+          {{- if .command }}
+          command: {{ .command }}
+          {{- end}}
           {{- if .envFrom }}
           envFrom:
           {{- if .envFrom.secretRef }}
@@ -143,6 +146,9 @@ spec:
           {{- if .securityContext }}
           securityContext:
           {{- toYaml .securityContext | nindent 12 }}
+          {{- end}}
+          {{- if .command }}
+          command: {{ .command }}
           {{- end}}
           {{- if and .vault .vault.enabled }}
           args:
