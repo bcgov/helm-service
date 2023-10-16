@@ -143,7 +143,7 @@ spec:
           securityContext:
             fsGroup: {{ .Values.cronjob.podSecurityContext.fsGroup }}
           {{- end }}
-          {{- if and .Values.cronjob.volumes .Values.cronjob.volumes.enabled }}
+          {{- if .Values.cronjob.volumes }}
           volumes:
           {{- tpl (toYaml .Values.cronjob.volumes) . | nindent 10 }}
           {{- end }}
