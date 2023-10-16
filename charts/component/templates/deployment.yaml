@@ -276,7 +276,7 @@ spec:
           {{- end }}
           {{- if .volumeMounts }}
           volumeMounts:
-            {{- tpl (toYaml .volumeMounts) . | nindent 12 }}
+            {{- tpl (toYaml .volumeMounts) $ | nindent 12 }}
           {{- end }}
       {{- end }}
       {{- if .Values.volumes }}
