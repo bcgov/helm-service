@@ -275,10 +275,8 @@ spec:
               scheme: HTTP
           {{- end }}
           {{- if .volumeMounts }}
-          {{- with .volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- tpl (toYaml .volumeMounts) . | nindent 12 }}
           {{- end }}
       {{- end }}
       {{- if .Values.volumes }}
