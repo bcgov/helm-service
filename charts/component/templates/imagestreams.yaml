@@ -13,10 +13,18 @@ spec:
   lookupPolicy:
     local: false
   tags:
+      {{- if (contains "sha256:" .tag) }}
+    - name: {{ trimPrefix "sha256:" .tag  | quote }}
+      {{- else }}
     - name: {{ .tag | quote }}
+      {{- end }}
       from:
         kind: DockerImage
+        {{- if (contains "sha256:" .tag) }}
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ .tag }}'
+        {{- else }}
         name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ .tag }}'
+        {{- end }}
       referencePolicy:
         type: Local
 {{- end }}
@@ -34,10 +42,18 @@ spec:
   lookupPolicy:
     local: false
   tags:
+      {{- if (contains "sha256:" .tag) }}
+    - name: {{ trimPrefix "sha256:" .tag  | quote }}
+      {{- else }}
     - name: {{ .tag | quote }}
+      {{- end }}
       from:
         kind: DockerImage
+        {{- if (contains "sha256:" .tag) }}
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ .tag }}'
+        {{- else }}
         name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ .tag }}'
+        {{- end }}
       referencePolicy:
         type: Local
 {{- end }}

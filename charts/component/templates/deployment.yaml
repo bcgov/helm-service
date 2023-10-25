@@ -49,7 +49,12 @@ spec:
       initContainers:
       {{- range .Values.initContainers }}
         - name: {{ .name }}
+          {{- if (contains "sha256:" .tag) }}
+          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" .tag  }}'
+          {{- else }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
+          {{- end }}
+
           imagePullPolicy: Always
           {{- if .command }}
           command:
@@ -176,7 +181,11 @@ spec:
             - "{{ . }}"
           {{- end }}
           {{- end }}
+          {{- if (contains "sha256:" .tag) }}
+          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" .tag  }}'
+          {{- else }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ .tag }}'
+          {{- end }}
           imagePullPolicy: Always
           {{- if .envFrom }}
           envFrom:
