@@ -9,12 +9,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  {{- range .Values.service.ports }}
-    - port: {{ .port }}
-      targetPort: {{ .targetPort }}
-      protocol: {{ .protocol }}
-      name: {{ .name }}
-  {{- end }}
+    {{- toYaml .Values.service.ports | nindent 4 }} 
   selector:
     {{- include "component.selectorLabels" . | nindent 4 }}
 {{- end }}
