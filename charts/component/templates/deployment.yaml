@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "component.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling }}
+  {{- if .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   {{- if .Values.deploymentStrategy }}
