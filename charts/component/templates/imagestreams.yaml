@@ -13,17 +13,17 @@ spec:
   lookupPolicy:
     local: false
   tags:
-      {{- if (contains "sha256:" .tag) }}
-    - name: {{ trimPrefix "sha256:" .tag  | quote }}
+      {{- if (contains "sha256:" (tpl .tag $)) }}
+    - name: {{ trimPrefix "sha256:" (tpl .tag $)  | quote }}
       {{- else }}
-    - name: {{ .tag | quote }}
+    - name: {{ (tpl .tag $) | quote }}
       {{- end }}
       from:
         kind: DockerImage
-        {{- if (contains "sha256:" .tag) }}
-        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ .tag }}'
+        {{- if (contains "sha256:" (tpl .tag $)) }}
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ (tpl .tag $) }}'
         {{- else }}
-        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ .tag }}'
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ (tpl .tag $) }}'
         {{- end }}
       referencePolicy:
         type: Local
@@ -42,17 +42,17 @@ spec:
   lookupPolicy:
     local: false
   tags:
-      {{- if (contains "sha256:" .tag) }}
-    - name: {{ trimPrefix "sha256:" .tag  | quote }}
+      {{- if (contains "sha256:" (tpl .tag $)) }}
+    - name: {{ trimPrefix "sha256:" (tpl .tag $)  | quote }}
       {{- else }}
-    - name: {{ .tag | quote }}
+    - name: {{ (tpl .tag $) | quote }}
       {{- end }}
       from:
         kind: DockerImage
-        {{- if (contains "sha256:" .tag) }}
-        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ .tag }}'
+        {{- if (contains "sha256:" (tpl .tag $)) }}
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ (tpl .tag $) }}'
         {{- else }}
-        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ .tag }}'
+        name: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ (tpl .tag $) }}'
         {{- end }}
       referencePolicy:
         type: Local

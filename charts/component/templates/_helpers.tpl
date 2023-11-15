@@ -80,7 +80,7 @@ vault.hashicorp.com/agent-inject-token: 'true'
 vault.hashicorp.com/agent-pre-populate-only: 'true' # this makes sure the secret vault will only change during pod restart
 vault.hashicorp.com/auth-path: auth/k8s-silver  # This was tricky.  Be sure to use k8s-silver, k8s-gold, or k8s-golddr
 vault.hashicorp.com/namespace: platform-services
-vault.hashicorp.com/role: {{.Values.vault.role}}  # licenseplate-nonprod or licenseplate-prod are your options
+vault.hashicorp.com/role: {{tpl .Values.global.license .}}-{{tpl .Values.vault.role .}}  # licenseplate-nonprod or licenseplate-prod are your options
 {{- if .Values.vault.resources }}
 vault.hashicorp.com/agent-requests-cpu: {{.Values.vault.resources.requests.cpu }}
 vault.hashicorp.com/agent-limits-cpu: {{.Values.vault.resources.limits.cpu }}
@@ -92,9 +92,9 @@ vault.hashicorp.com/agent-limits-mem: {{.Values.vault.resources.limits.memory }}
 # - The name of the secret is any unique string after vault.hashicorp.com/agent-inject-secret-<name>
 # - The value is the path in Vault where the secret is located.
 {{- range $k := .Values.vault.secretPaths }}
-vault.hashicorp.com/agent-inject-secret-{{$k}}:    {{$.Values.vault.role}}/{{$k}}
-vault.hashicorp.com/agent-inject-template-{{$k}}: |
-  {{ printf "%s" "{{" }}- with secret "{{$.Values.vault.role}}/{{$k}}"{{ printf "%s" "}}" }}
+vault.hashicorp.com/agent-inject-secret-{{tpl $k $}}:    {{tpl $.Values.global.license $}}-{{tpl $.Values.vault.role $}}/{{tpl $k $}}
+vault.hashicorp.com/agent-inject-template-{{tpl $k $}}: |
+  {{ printf "%s" "{{" }}- with secret "{{tpl $.Values.global.license $}}-{{tpl $.Values.vault.role $}}/{{tpl $k $}}"{{ printf "%s" "}}" }}
   {{ printf "%s" "{{" }}- range $k,$v := .Data.data{{ printf "%s" "}}"  }}
   export {{"{{"}}$k{{"}}"}}="{{"{{"}}$v{{"}}"}}"
   {{ printf "%s" "{{" }}- end{{ printf "%s" "}}" }}
