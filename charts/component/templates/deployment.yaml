@@ -58,13 +58,13 @@ spec:
           {{- if .command }}
           command:
           {{- range .command }}
-            - "{{tpl . .}}"
+            - "{{tpl . $}}"
           {{- end }}
           {{- end}}
           {{- if .args }}
           args:
           {{- range .args }}
-            - "{{ . }}"
+            - "{{tpl . $}}"
           {{- end }}
           {{- end }}
           {{- if .envFrom }}
@@ -180,7 +180,7 @@ spec:
           {{- if .args }}
           args:
           {{- range .args }}
-            - "{{ . }}"
+            - "{{tpl . $}}"
           {{- end }}
           {{- end }}
           {{- if (contains "sha256:" .tag) }}
