@@ -20,11 +20,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: ./helm-service
       - uses: actions/checkout@v4
         with:
           repository: bcgov/${{ matrix.repo_names }}
           ref: main
-          path: ./../${{ matrix.repo_names }}
+          path: ./${{ matrix.repo_names }}
       - name: Validate Changes
         shell: bash
         run: |
