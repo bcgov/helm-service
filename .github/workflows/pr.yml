@@ -1,0 +1,23 @@
+name: On Pull Request to Main
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  validate-changes:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        repo_names: [quickstart-openshift, pubcode]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          name: bcgov/${{ matrix.repo_names }}
+          ref: main
+      - name: Validate Changes
+        shell: bash
+        run: |
+          #recursively print directories and contents
+          tree 
