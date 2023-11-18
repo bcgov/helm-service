@@ -24,6 +24,7 @@ jobs:
         with:
           repository: bcgov/${{ matrix.repo_names }}
           ref: main
+          path: ./${{ matrix.repo_names }}
       - name: Validate Changes
         shell: bash
         run: |
