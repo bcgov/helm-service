@@ -1,6 +1,14 @@
 name: On Pull Request to Main
 on:
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+      - unlabeled
+      - edited
     branches:
       - main
 jobs:
