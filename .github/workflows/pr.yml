@@ -48,5 +48,5 @@ jobs:
         run: |
           cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
           helm dependency update
-          helm template ${{ matrix.repo_name }} --debug ${{ matrix.repo_name }} .
+          helm template ${{ matrix.repo_name }} --debug ${{ matrix.params }} .
           
