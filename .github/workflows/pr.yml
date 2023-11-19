@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
+        include:
+          - repo_name: quickstart-openshift
+            params: --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName
+          - repo_name: pubcode
+            params: ''
         repo_names: [quickstart-openshift, pubcode]
     timeout-minutes: 10
     steps:
@@ -24,11 +29,25 @@ jobs:
           path: ./helm-service
       - uses: actions/checkout@v4
         with:
-          repository: bcgov/${{ matrix.repo_names }}
+          repository: bcgov/${{ matrix.repo_name }}
           ref: main
-          path: ./${{ matrix.repo_names }}
+          path: ./${{ matrix.repo_name }}
+      - name: Add Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: |
+          cd ./helm-service/utils
+          npm ci
+      - name: Execute Program
+        run: |
+          cd ./helm-service/utils
+          DESTINATION_REPO=${{ matrix.repo_name }}  node index.js
       - name: Validate Changes
         shell: bash
         run: |
-          #recursively print directories and contents
-          tree 
+          cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
+          helm dependency update
+          helm template ${{ matrix.repo_name }} --debug ${{ matrix.repo_name }} .
+          
