@@ -1,18 +1,11 @@
 name: On Pull Request to Main
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
-      - labeled
-      - unlabeled
-      - edited
     branches:
       - main
 jobs:
   validate-changes:
+    if: '!github.event.pull_request.head.repo.fork'
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -21,7 +14,7 @@ jobs:
             params: --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName
           - repo_name: pubcode
             params: ''
-    timeout-minutes: 10
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
         with:
