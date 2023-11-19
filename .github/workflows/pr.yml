@@ -42,8 +42,7 @@ jobs:
           npm ci
       - name: Execute Program
         run: |
-          cd ./helm-service/util
-          DESTINATION_REPO=${{ matrix.repo_name }}  node index.js
+          DESTINATION_REPO=${{ matrix.repo_name }}  node ./helm-service/util/index.js
       - name: Validate Changes
         shell: bash
         run: |
