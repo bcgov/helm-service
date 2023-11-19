@@ -38,7 +38,7 @@ jobs:
           node-version: '20'
       - name: Install Dependencies
         run: |
-          cd ./helm-service/utils
+          cd ./helm-service/util
           npm ci
       - name: Execute Program
         run: |
