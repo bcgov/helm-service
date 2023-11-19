@@ -42,7 +42,7 @@ jobs:
           npm ci
       - name: Execute Program
         run: |
-          cd ./helm-service/utils
+          cd ./helm-service/util
           DESTINATION_REPO=${{ matrix.repo_name }}  node index.js
       - name: Validate Changes
         shell: bash
