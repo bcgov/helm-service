@@ -49,9 +49,9 @@ spec:
       {{- range .Values.initContainers }}
         - name: {{ .name }}
           {{- if (contains "sha256:" .tag) }}
-          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ tpl .name $ }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
           {{- else }}
-          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ tpl .tag $ }}'
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ tpl .name $ }}:{{ tpl .tag $ }}'
           {{- end }}
 
           imagePullPolicy: Always
@@ -184,9 +184,9 @@ spec:
           {{- end }}
           {{- end }}
           {{- if (contains "sha256:" .tag) }}
-          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ tpl .name $ }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
           {{- else }}
-          image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ tpl .tag $ }}'
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ tpl .name $ }}:{{ tpl .tag $ }}'
           {{- end }}
           imagePullPolicy: Always
           {{- if .envFrom }}

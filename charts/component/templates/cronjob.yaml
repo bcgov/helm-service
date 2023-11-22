@@ -52,7 +52,7 @@ spec:
               securityContext:
               {{- toYaml .securityContext | nindent 12 }}
               {{- end}}
-              image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$.Release.Name}}-{{ .name }}:{{ .tag }}'
+              image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ tpl .name $ }}:{{ tpl .tag $ }}'
               imagePullPolicy: Always
                 {{- if .envFrom }}
               envFrom:
