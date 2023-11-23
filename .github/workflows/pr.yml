@@ -9,11 +9,12 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
+        repo_name: [quickstart-openshift, pubcode]
         include:
           - repo_name: quickstart-openshift
-            params: --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName
+            params: --set global.autoscaling=false --set-string global.repository=bcgov/quickstart-openshift  --set-string backend.containers[0].tag=test  --set-string backend.initContainers[0].tag=test --set-string frontend.containers[0].tag=test --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName
           - repo_name: pubcode
-            params: ''
+            params: --set global.autoscaling=false --set-string global.repository=bcgov/pubcode 
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
