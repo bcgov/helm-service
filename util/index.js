@@ -13,7 +13,7 @@ const main = async () => {
   const dependencies = destChartYamlToJSON.dependencies;
   let newDependencies = [];
   for(const element of dependencies){
-    if(element.name === 'component'){
+    if(element.name === 'component' && element.repository === 'https://bcgov.github.io/helm-service'){
       element.version = version;
       element.repository = `file://../../../helm-service/charts/component`;
     }

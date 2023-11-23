@@ -52,8 +52,20 @@ spec:
               securityContext:
               {{- toYaml .securityContext | nindent 12 }}
               {{- end}}
-              image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$.Release.Name}}-{{ .name }}:{{ .tag }}'
-              imagePullPolicy: Always
+              {{- if  $.Values.global.openshiftImageRegistry }}
+              {{- if (contains "sha256:" .tag) }}
+              image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$.Release.Name}}-{{ .name }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
+              {{- else }}
+              image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$.Release.Name}}-{{ .name }}:{{ tpl .tag $ }}'
+              {{- end }}
+              {{- else }}
+              {{- if (contains "sha256:" .tag) }}
+              image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ (tpl .tag $) }}'
+              {{- else }}
+              image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ (tpl .tag $) }}'
+              {{- end }}
+              {{- end }}
+              imagePullPolicy: {{ default "IfNotPresent" .pullPolicy }}
                 {{- if .envFrom }}
               envFrom:
                     {{- if .envFrom.secretRef }}
