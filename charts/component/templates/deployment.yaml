@@ -48,13 +48,21 @@ spec:
       initContainers:
       {{- range .Values.initContainers }}
         - name: {{ .name }}
+          {{- if  $.Values.global.openshiftImageRegistry }}
           {{- if (contains "sha256:" .tag) }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
           {{- else }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ tpl .tag $ }}'
           {{- end }}
+          {{- else }}
+          {{- if (contains "sha256:" .tag) }}
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ (tpl .tag $) }}'
+          {{- else }}
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ (tpl .tag $) }}'
+          {{- end }}
+          {{- end }}
 
-          imagePullPolicy: Always
+          imagePullPolicy: {{ default "IfNotPresent" .pullPolicy }}
           {{- if .command }}
           command:
           {{- range .command }}
@@ -183,12 +191,20 @@ spec:
             - "{{tpl . $}}"
           {{- end }}
           {{- end }}
+          {{- if  and (and $.Values.global.imagestreams $.Values.global.imagestreams.enabled)}}
           {{- if (contains "sha256:" .tag) }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ trimPrefix "sha256:" tpl .tag $  }}'
           {{- else }}
           image: '{{$.Values.global.openshiftImageRegistry}}/{{$.Release.Namespace}}/{{$releaseName}}-{{ .name }}:{{ tpl .tag $ }}'
           {{- end }}
-          imagePullPolicy: Always
+          {{- else }}
+          {{- if (contains "sha256:" .tag) }}
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}@{{ (tpl .tag $) }}'
+          {{- else }}
+          image: '{{ tpl .registry $ }}/{{ tpl .repository $ }}/{{ .image }}:{{ (tpl .tag $) }}'
+          {{- end }}
+          {{- end }}
+          imagePullPolicy: {{ default "IfNotPresent" .pullPolicy }}
           {{- if .envFrom }}
           envFrom:
           {{- if .envFrom.secretRef }}
