@@ -54,6 +54,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Pod Annotations
 */}}
 {{- define "component.podAnnotations" -}}
+{{- if .Values.global.podAnnotations }}
+{{tpl .Values.global.podAnnotations .}}
+{{- end }}
 {{- end }}
 
 
