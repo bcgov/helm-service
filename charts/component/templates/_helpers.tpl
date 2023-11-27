@@ -38,9 +38,10 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- if and .Values.image .Values.image.tag }}
 app.kubernetes.io/image-tag: {{ .Values.image.tag | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.global.labels }}
+{{tpl .Values.global.labels .}}
 {{- end }}
-
+{{- end }}
 {{/*
 Selector labels
 */}}
