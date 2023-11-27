@@ -39,8 +39,8 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/image-tag: {{ .Values.image.tag | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/timestamp: {{ now }}
 {{- end }}
-
 {{/*
 Selector labels
 */}}
