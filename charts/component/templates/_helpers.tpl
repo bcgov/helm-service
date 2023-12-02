@@ -35,8 +35,8 @@ helm.sh/chart: {{ include "component.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-{{- if and .Values.image .Values.image.tag }}
-app.kubernetes.io/image-tag: {{ .Values.image.tag | quote }}
+{{- if .Values.global.tag }}
+app.kubernetes.io/image-tag: {{ .Values.global.tag | quote }}
 {{- end }}
 {{- if .Values.global.labels }}
 {{tpl .Values.global.labels .}}
