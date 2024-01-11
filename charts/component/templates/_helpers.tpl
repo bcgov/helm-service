@@ -51,11 +51,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Pod Annotations
+Pod Annotations, add from both global and component values
 */}}
 {{- define "component.podAnnotations" -}}
 {{- if .Values.global.podAnnotations }}
 {{tpl .Values.global.podAnnotations .}}
+{{- end }}
+{{- if .Values.podAnnotations }}
+{{tpl .Values.podAnnotations .}}
 {{- end }}
 {{- end }}
 
