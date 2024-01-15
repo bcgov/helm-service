@@ -39,6 +39,7 @@ metadata:
   labels:
     {{- include "component.labels" $ | nindent 4 }}
 spec:
+  ingressClassName: openshift-default
   lookupPolicy:
     local: false
   tags:
