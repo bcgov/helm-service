@@ -43,7 +43,7 @@ jobs:
         run: |
           oc login --token=${{ secrets.oc_token }} --server=${{ vars.oc_server }}
           oc project ${{ vars.OC_NAMESPACE }} # Safeguard!
-          cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
+          cd ./${{ matrix.repo_name }}/charts/app
           helm dependency update
           helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
           
