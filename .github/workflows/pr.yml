@@ -11,8 +11,6 @@ jobs:
       matrix:
         repo_name: [ pubcode, onroutebc]
         include:
-          - repo_name: quickstart-openshift
-            params: --set global.autoscaling=false --set-string global.repository=bcgov/quickstart-openshift  --set-string backend.containers[0].tag=test  --set-string backend.initContainers[0].tag=test --set-string frontend.containers[0].tag=test --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName --values values.yaml
           - repo_name: pubcode
             params: --set global.autoscaling=false --set-string global.repository=bcgov/pubcode --values values.yaml
           - repo_name: onroutebc
