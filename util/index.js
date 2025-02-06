@@ -6,12 +6,7 @@ const destination_repo = process.env.DESTINATION_REPO|| "quickstart-openshift";
 const sourceDirectory = ".";
 const main = async () => {
   const chartYaml = await fs_promises.readFile("./helm-service/charts/component/Chart.yaml");
-  let destChartYaml;
-  try {
-          destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`);
-  } catch (e) {
-          destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/app/Chart.yaml`) 
-  }
+  const destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`);
   const chartYamlToJSON =jsYaml.load(chartYaml);
   const version = chartYamlToJSON.version;
   const destChartYamlToJSON =jsYaml.load(destChartYaml);
@@ -26,10 +21,6 @@ const main = async () => {
   }
   destChartYamlToJSON.dependencies = newDependencies;
   const newDestChartYaml = jsYaml.dump(destChartYamlToJSON);
-  try {
-          await fs_promises.writeFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`, newDestChartYaml);
-  } catch (e) {
-          await fs_promises.writeFile(`./${destination_repo}/charts/app/Chart.yaml`, newDestChartYaml);
-  }
+  await fs_promises.writeFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`, newDestChartYaml);
 }
 await main();

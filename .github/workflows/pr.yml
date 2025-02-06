@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        repo_name: [quickstart-openshift, pubcode, onroutebc]
+        repo_name: [ pubcode, onroutebc]
         include:
           - repo_name: quickstart-openshift
             params: --set global.autoscaling=false --set-string global.repository=bcgov/quickstart-openshift  --set-string backend.containers[0].tag=test  --set-string backend.initContainers[0].tag=test --set-string frontend.containers[0].tag=test --set-string global.secrets.databasePassword=test --set-string global.secrets.databaseUser=test --set-string global.secrets.databasePassword=databaseName --values values.yaml
@@ -43,7 +43,7 @@ jobs:
         run: |
           oc login --token=${{ secrets.oc_token }} --server=${{ vars.oc_server }}
           oc project ${{ vars.OC_NAMESPACE }} # Safeguard!
-          cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }} ||  cd ./${{ matrix.repo_name }}/charts/app
+          cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
           helm dependency update
           helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
           
