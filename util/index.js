@@ -6,10 +6,11 @@ const destination_repo = process.env.DESTINATION_REPO|| "quickstart-openshift";
 const sourceDirectory = ".";
 const main = async () => {
   const chartYaml = await fs_promises.readFile("./helm-service/charts/component/Chart.yaml");
+  let destChartYaml;
   try {
-          const destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`);
+          destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/${destination_repo}/Chart.yaml`);
   } catch (e) {
-          const destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/app/Chart.yaml`) 
+          destChartYaml = await fs_promises.readFile(`./${destination_repo}/charts/app/Chart.yaml`) 
   }
   const chartYamlToJSON =jsYaml.load(chartYaml);
   const version = chartYamlToJSON.version;
