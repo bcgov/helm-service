@@ -11,10 +11,10 @@ concurrency:
 
 jobs:
   helm-release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Configure Git
@@ -28,7 +28,7 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Conventional Changelog Update
-        uses: TriPSs/conventional-changelog-action@v3
+        uses: TriPSs/conventional-changelog-action@v6
         id: changelog
         continue-on-error: true
         with:
@@ -40,7 +40,7 @@ jobs:
           git-push: 'false'
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: steps.changelog.outputs.tag != ''
         continue-on-error: true
         env:
