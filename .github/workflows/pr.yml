@@ -12,7 +12,7 @@ jobs:
         repo_name: [ pubcode, onroutebc]
         include:
           - repo_name: pubcode
-            params: --set global.autoscaling=false --set-string global.repository=bcgov/pubcode --values values.yaml
+            params: --set global.autoscaling=false --set-string global.repository=bcgov/pubcode --set-string global.secrets.powerBIURL="https://anything" --values values.yaml
           - repo_name: onroutebc
             params: --set global.autoscaling=false --set-string global.repository=bcgov/onroutebc  --set-string global.tag=test  --set-string global.license=test --set-string global.zone=helm-test --set-string global.vault.role=vault-abc --values values.yaml
     timeout-minutes: 2
