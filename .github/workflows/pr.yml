@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        repo_name: [ pubcode, onroutebc]
+        repo_name: [ pubcode, onroutebc ]
         include:
           - repo_name: pubcode
             params: --set global.autoscaling=false --set-string global.repository=bcgov/pubcode --set-string global.secrets.powerBIURL="https://anything" --values values.yaml
@@ -37,13 +37,16 @@ jobs:
         run: |
           DESTINATION_REPO=${{ matrix.repo_name }}  node ./helm-service/util/index.js
 
-      - name: Validate Changes
+      - name: Install oc
         uses: bcgov/action-oc-runner@v1.2.3
         with:
-          oc_namespace: ${{ vars.oc_namespace }}
-          oc_server: ${{ vars.oc_server }}
           oc_token: ${{ secrets.oc_token }}
-          commands: |
-            cd ./charts/${{ matrix.repo_name }}
-            helm dependency update
-            helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
+          oc_server: ${{ vars.oc_server }}
+          oc_namespace: ${{ vars.oc_namespace }}
+
+      - name: Validate Changes
+        shell: bash
+        run: |
+          cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
+          helm dependency update
+          helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
