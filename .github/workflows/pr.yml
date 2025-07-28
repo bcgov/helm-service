@@ -44,6 +44,6 @@ jobs:
           oc_server: ${{ vars.oc_server }}
           oc_token: ${{ secrets.oc_token }}
           commands: |
-            cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
+            cd ./charts/${{ matrix.repo_name }}
             helm dependency update
             helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
