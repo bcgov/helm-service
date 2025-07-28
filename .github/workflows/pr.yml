@@ -17,6 +17,13 @@ jobs:
             params: --set global.autoscaling=false --set-string global.repository=bcgov/onroutebc  --set-string global.tag=test  --set-string global.license=test --set-string global.zone=helm-test --set-string global.vault.role=vault-abc --values values.yaml
     timeout-minutes: 2
     steps:
+      - name: Install oc
+        uses: bcgov/action-oc-runner@v1.2.3
+        with:
+          oc_token: ${{ secrets.oc_token }}
+          oc_server: ${{ vars.oc_server }}
+          oc_namespace: ${{ vars.oc_namespace }}
+
       - uses: actions/checkout@v4
         with:
           path: ./helm-service
@@ -36,13 +43,6 @@ jobs:
       - name: Execute Program
         run: |
           DESTINATION_REPO=${{ matrix.repo_name }}  node ./helm-service/util/index.js
-
-      - name: Install oc
-        uses: bcgov/action-oc-runner@v1.2.3
-        with:
-          oc_token: ${{ secrets.oc_token }}
-          oc_server: ${{ vars.oc_server }}
-          oc_namespace: ${{ vars.oc_namespace }}
 
       - name: Validate Changes
         shell: bash
