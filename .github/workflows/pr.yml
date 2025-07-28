@@ -47,9 +47,6 @@ jobs:
       - name: Validate Changes
         shell: bash
         run: |
-          pwd
-          ls -la
-          whoami
           cd ./${{ matrix.repo_name }}/charts/${{ matrix.repo_name }}
           helm dependency update
           helm install --dry-run ${{ matrix.repo_name }}-test-helm-update --debug ${{ matrix.params }} .
