@@ -24,10 +24,10 @@ jobs:
           oc_server: ${{ vars.oc_server }}
           oc_namespace: ${{ vars.oc_namespace }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: ./helm-service
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: bcgov/${{ matrix.repo_name }}
           ref: main
