@@ -33,7 +33,7 @@ jobs:
           ref: main
           path: ./${{ matrix.repo_name }}
       - name: Add Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Install Dependencies
