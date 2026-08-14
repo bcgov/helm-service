@@ -1,4 +1,12 @@
 {{- if and .Values.pvc .Values.pvc.enabled }}
+{{- $pvcName := include "component.fullname" . }}
+{{- if .Values.pvc.nameOverride }}
+{{- $pvcName = tpl .Values.pvc.nameOverride $ }}
+{{- end }}
+
+{{- $existingPVC := lookup "v1" "PersistentVolumeClaim" .Release.Namespace $pvcName }}
+
+{{- if not $existingPVC }}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -17,4 +25,5 @@ spec:
     requests:
       storage: {{ .Values.pvc.size }}
   storageClassName: {{ .Values.pvc.storageClassName }}
+{{- end }}
 {{- end }}
