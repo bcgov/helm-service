@@ -3,6 +3,17 @@ entries:
   component:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-08-17T21:35:26.699839375Z"
+    description: A Helm chart template for supporting different kind of application
+      deployment.
+    digest: e0acf9064a9a47e59234a0661e9884a28426ca3f80777aa7ca4b55b1e7a221e1
+    name: component
+    type: application
+    urls:
+    - https://github.com/bcgov/helm-service/releases/download/component-0.3.5/component-0.3.5.tgz
+    version: 0.3.5
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-08-14T22:50:30.538277548Z"
     description: A Helm chart template for supporting different kind of application
       deployment.
@@ -320,4 +331,4 @@ entries:
     urls:
     - https://github.com/bcgov/helm-service/releases/download/component-0.0.1/component-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-14T22:50:30.539322525Z"
+generated: "2026-08-17T21:35:26.700066475Z"
