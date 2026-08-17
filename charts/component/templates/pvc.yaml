@@ -16,6 +16,10 @@ metadata:
   {{- else }}
   name: {{ include "component.fullname" . }}
   {{- end }}
+  {{- if .Values.pvc.persist }}
+  annotations:
+    helm.sh/resource-policy: "keep"
+  {{- end }}
   labels:
     {{- include "component.labels" . | nindent 4 }}
 spec:
